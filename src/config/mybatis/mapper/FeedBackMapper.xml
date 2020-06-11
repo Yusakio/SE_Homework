@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="adminis.dao.FeedBackDao">
+	<!-- 反馈插入操作 -->
+	<insert id="add" parameterType="adminis.entity.FeedBack">
+		insert into feedback(id,text,photo,createTime,handleTime,feedType,status,createId,feedback) values(null,#{text},#{photo},#{createTime},#{handleTime},#{feedType},#{status},#{createId},#{feedback})
+	</insert>
+	<!-- 反馈编辑操作 -->
+	<update id="edit" parameterType="adminis.entity.FeedBack">
+		update feedback set text = #{text},handleTime = #{handleTime},status = #{status},createId = #{createId},feedback = #{feedback} where id = #{id}
+	</update>
+	<!-- 反馈信息搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="adminis.entity.FeedBack">
+		select * from feedback where 1 = 1 
+		<if test="createId != null">
+			and createId = #{createId} 
+		</if>
+		<if test="status != null">
+			and status = #{status} 
+		</if>
+		<if test="text != null">
+			and text like '%${text}%' 
+		</if>
+		<if test="feedType != null">
+			and feedType = #{feedType} 
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 获取所有反馈信息 -->
+	<select id="findAll" parameterType="Map" resultType="adminis.entity.FeedBack">
+		select * from feedback
+	</select>
+	<!-- 获取单个反馈信息 -->
+	<select id="find" parameterType="Long" resultType="adminis.entity.FeedBack">
+		select * from feedback where id = #{value}
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from feedback where 1=1  
+		<if test="createId != null">
+			and createId = #{createId} 
+		</if>
+		<if test="status != null">
+			and status = #{status} 
+		</if>
+		<if test="feedType != null">
+			and feedType = #{feedType} 
+		</if>
+	</select>
+	<!-- 删除反馈信息 -->
+	<delete id="delete" parameterType="Long">
+		delete from feedback where id = ${value}
+	</delete>
+</mapper>
